@@ -1,1 +1,654 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SSC CGL RankMantra</title>
 
+<style>
+*{box-sizing:border-box}
+body{
+ margin:0;
+ font-family:Arial,sans-serif;
+ background:#f3f6fb;
+ color:#172033;
+}
+header{
+ background:#101d3a;
+ color:white;
+ text-align:center;
+ padding:24px 12px;
+}
+header h1{margin:0;font-size:28px}
+header p{color:#cbd5e1;margin-bottom:0}
+.container{max-width:850px;margin:20px auto;padding:12px}
+.card{
+ background:white;
+ padding:20px;
+ border-radius:14px;
+ margin-bottom:16px;
+ box-shadow:0 3px 14px #0000000c;
+}
+h2{margin-top:0}
+.grid{
+ display:grid;
+ grid-template-columns:repeat(2,1fr);
+ gap:12px;
+}
+.subject{
+ background:#f4f7fc;
+ border:1px solid #dce4f0;
+ border-radius:10px;
+ padding:15px;
+}
+.subject h3{margin:0 0 8px}
+button{
+ border:0;
+ border-radius:8px;
+ padding:12px 17px;
+ font-size:15px;
+ font-weight:bold;
+ cursor:pointer;
+}
+.primary{background:#1749a5;color:white}
+.secondary{background:#e8edf5;color:#172033}
+.option{
+ display:block;
+ width:100%;
+ text-align:left;
+ margin:10px 0;
+ background:#f0f4fa;
+ color:#172033;
+ border:1px solid #dce4ef;
+}
+.option.correct{background:#d9fbe5;border-color:#16a34a}
+.option.wrong{background:#ffe0e0;border-color:#dc2626}
+button:disabled{opacity:.6}
+input{max-width:100%}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
+.muted{color:#64748b;font-size:14px}
+.tag{
+ display:inline-block;
+ background:#e8efff;
+ color:#1749a5;
+ padding:5px 9px;
+ border-radius:6px;
+ margin:3px;
+ font-size:12px;
+}
+.timer{font-size:23px;font-weight:bold;color:#c02626}
+.progress{
+ height:8px;
+ background:#e5eaf2;
+ border-radius:10px;
+ overflow:hidden;
+ margin:14px 0;
+}
+.progress div{height:100%;background:#2563eb;width:0}
+.explanation{
+ background:#eff6ff;
+ border-left:4px solid #2563eb;
+ padding:12px;
+ margin-top:12px;
+ border-radius:6px;
+}
+#quizArea,#resultArea{display:none}
+#feedback{font-weight:bold;margin-top:12px}
+@media(max-width:550px){
+ .grid{grid-template-columns:1fr}
+ .container{padding:9px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+ <h1>SSC CGL RankMantra</h1>
+ <p>Your Preparation. Your Rank. Your Mantra.</p>
+</header>
+
+<main class="container">
+
+<section class="card" id="homeArea">
+ <h2>SSC CGL Tier-I</h2>
+ <p class="muted">चार विषय · 100 प्रश्न · 60 मिनट</p>
+
+ <div class="grid">
+  <div class="subject">
+   <h3>Reasoning</h3>
+   <p>25 Questions · 15 Minutes</p>
+  </div>
+  <div class="subject">
+   <h3>General Awareness</h3>
+   <p>25 Questions · 15 Minutes</p>
+  </div>
+  <div class="subject">
+   <h3>Quantitative Aptitude</h3>
+   <p>25 Questions · 15 Minutes</p>
+  </div>
+  <div class="subject">
+   <h3>English</h3>
+   <p>25 Questions · 15 Minutes</p>
+  </div>
+ </div>
+
+ <hr>
+
+ <h3>Test Mode</h3>
+
+ <label>
+  <input type="radio" name="mode" value="practice" checked>
+  Practice Mode
+ </label>
+
+ <br><br>
+
+ <label>
+  <input type="radio" name="mode" value="exam">
+  Exam Mode
+ </label>
+
+ <p class="muted">
+  सही उत्तर +2 | गलत उत्तर -0.50 | बिना उत्तर 0
+ </p>
+
+ <button class="primary" onclick="startTest()">Start Test</button>
+</section>
+
+<section class="card">
+ <h2>Question Bank Import</h2>
+
+ <p class="muted">
+  सत्यापित SSC CGL PYQ की JSON फाइल Import करें।
+  प्रत्येक प्रश्न के साथ Year, Tier, Shift और Source होना जरूरी है।
+ </p>
+
+ <input type="file" id="jsonFile" accept=".json">
+
+ <br><br>
+
+ <button class="primary" onclick="importQuestions()">
+  Import Questions
+ </button>
+
+ <button class="secondary" onclick="downloadTemplate()">
+  Download JSON Format
+ </button>
+
+ <p id="bankStatus" class="muted">
+  अभी Question Bank खाली है।
+ </p>
+</section>
+
+<section class="card" id="quizArea">
+
+ <div class="row" style="justify-content:space-between">
+  <strong id="sectionName"></strong>
+  <span class="timer" id="timer">15:00</span>
+ </div>
+
+ <div class="progress">
+  <div id="progressBar"></div>
+ </div>
+
+ <p class="muted" id="questionCount"></p>
+
+ <div id="questionMeta"></div>
+
+ <h3 id="questionText"></h3>
+
+ <div id="optionsArea"></div>
+
+ <div id="feedback"></div>
+
+ <div id="explanationArea"></div>
+
+ <br>
+
+ <button class="primary" id="nextBtn" onclick="nextQuestion()" disabled>
+  Next Question
+ </button>
+
+</section>
+
+<section class="card" id="resultArea">
+ <h2>Final Result</h2>
+
+ <h3 id="finalScore"></h3>
+
+ <div id="finalDetails"></div>
+
+ <div id="reviewArea"></div>
+
+ <br>
+
+ <button class="primary" onclick="location.reload()">
+  Back to Home
+ </button>
+</section>
+
+</main>
+
+<script>
+
+const sections=[
+ "Reasoning",
+ "General Awareness",
+ "Quantitative Aptitude",
+ "English"
+];
+
+let questionBank=[];
+let testQuestions=[];
+let currentSection=0;
+let currentQuestion=0;
+let selectedAnswer=null;
+let mode="practice";
+let timerInterval=null;
+let secondsLeft=900;
+
+let score=0;
+let correctCount=0;
+let wrongCount=0;
+let attemptedCount=0;
+let answers=[];
+
+const $=id=>document.getElementById(id);
+
+function importQuestions(){
+
+ const file=$("jsonFile").files[0];
+
+ if(!file){
+  alert("पहले JSON फाइल चुनें।");
+  return;
+ }
+
+ const reader=new FileReader();
+
+ reader.onload=function(e){
+
+  try{
+
+   const data=JSON.parse(e.target.result);
+
+   if(!Array.isArray(data)){
+    throw new Error("JSON में Questions की सूची होनी चाहिए।");
+   }
+
+   for(const q of data){
+
+    if(
+     !sections.includes(q.subject) ||
+     !q.text ||
+     !Array.isArray(q.options) ||
+     q.options.length!==4 ||
+     !Number.isInteger(q.answer) ||
+     q.answer<0 ||
+     q.answer>3 ||
+     !q.year ||
+     !q.tier ||
+     !q.shift ||
+     !q.source ||
+     !q.explanation
+    ){
+     throw new Error("किसी प्रश्न की जानकारी अधूरी है।");
+    }
+
+   }
+
+   questionBank=[...questionBank,...data];
+
+   $("bankStatus").textContent=
+    questionBank.length+" प्रश्न Import हुए।";
+
+   alert("Question Bank Import हो गया!");
+
+  }catch(error){
+   alert("Import Error: "+error.message);
+  }
+
+ };
+
+ reader.readAsText(file);
+}
+
+function downloadTemplate(){
+
+ const sample=[
+  {
+   subject:"Reasoning",
+   text:"यहाँ वास्तविक प्रश्न लिखें",
+   options:["Option A","Option B","Option C","Option D"],
+   answer:0,
+   explanation:"सत्यापित Explanation",
+   year:"2023",
+   tier:"Tier-I",
+   shift:"Shift-1",
+   source:"प्रश्नपत्र का स्रोत"
+  }
+ ];
+
+ const blob=new Blob(
+  [JSON.stringify(sample,null,2)],
+  {type:"application/json"}
+ );
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download="rankmantra-question-format.json";
+ a.click();
+
+ URL.revokeObjectURL(url);
+}
+
+function startTest(){
+
+ if(questionBank.length===0){
+  alert("पहले वास्तविक PYQ Import करें।");
+  return;
+ }
+
+ mode=document.querySelector(
+  'input[name="mode"]:checked'
+ ).value;
+
+ testQuestions=sections.map(subject=>
+  questionBank.filter(q=>q.subject===subject)
+ );
+
+ for(let i=0;i<sections.length;i++){
+
+  if(testQuestions[i].length!==25){
+
+   alert(
+    sections[i]+" में 25 प्रश्न जरूरी हैं। अभी उपलब्ध प्रश्न: "+
+    testQuestions[i].length
+   );
+
+   return;
+  }
+
+ }
+
+ $("homeArea").style.display="none";
+ $("quizArea").style.display="block";
+
+ currentSection=0;
+ currentQuestion=0;
+
+ showQuestion();
+ startTimer();
+}
+
+function startTimer(){
+
+ clearInterval(timerInterval);
+
+ secondsLeft=900;
+ updateTimer();
+
+ timerInterval=setInterval(()=>{
+
+  secondsLeft--;
+  updateTimer();
+
+  if(secondsLeft<=0){
+   clearInterval(timerInterval);
+   nextSection();
+  }
+
+ },1000);
+}
+
+function updateTimer(){
+
+ let min=Math.floor(secondsLeft/60);
+ let sec=secondsLeft%60;
+
+ $("timer").textContent=
+  String(min).padStart(2,"0")+":"+
+  String(sec).padStart(2,"0");
+}
+
+function showQuestion(){
+
+ const list=testQuestions[currentSection];
+ const q=list[currentQuestion];
+
+ selectedAnswer=null;
+
+ $("sectionName").textContent=sections[currentSection];
+
+ $("questionCount").textContent=
+  "Question "+(currentQuestion+1)+" / 25";
+
+ $("progressBar").style.width=
+  ((currentQuestion+1)/25*100)+"%";
+
+ $("questionMeta").innerHTML=
+  '<span class="tag">SSC CGL '+escapeHTML(q.year)+'</span>'+
+  '<span class="tag">'+escapeHTML(q.tier)+'</span>'+
+  '<span class="tag">'+escapeHTML(q.shift)+'</span>';
+
+ $("questionText").textContent=q.text;
+
+ $("feedback").textContent="";
+ $("explanationArea").innerHTML="";
+ $("nextBtn").disabled=true;
+
+ $("optionsArea").innerHTML="";
+
+ q.options.forEach((option,index)=>{
+
+  const button=document.createElement("button");
+
+  button.className="option";
+  button.textContent=
+   String.fromCharCode(65+index)+". "+option;
+
+  button.onclick=()=>selectOption(index);
+
+  $("optionsArea").appendChild(button);
+
+ });
+
+}
+
+function selectOption(index){
+
+ if(selectedAnswer!==null)return;
+
+ selectedAnswer=index;
+
+ const q=testQuestions[currentSection][currentQuestion];
+
+ attemptedCount++;
+
+ const buttons=$("optionsArea").querySelectorAll("button");
+
+ buttons.forEach((button,i)=>{
+
+  button.disabled=true;
+
+  if(i===q.answer){
+   button.classList.add("correct");
+  }
+
+  if(i===index && index!==q.answer){
+   button.classList.add("wrong");
+  }
+
+ });
+
+ if(index===q.answer){
+
+  score+=2;
+  correctCount++;
+
+  $("feedback").textContent="सही उत्तर! +2 अंक";
+  $("feedback").style.color="#15803d";
+
+ }else{
+
+  score-=0.5;
+  wrongCount++;
+
+  $("feedback").textContent=
+   "गलत उत्तर। सही उत्तर: "+
+   String.fromCharCode(65+q.answer);
+
+  $("feedback").style.color="#dc2626";
+
+ }
+
+ answers.push({
+  question:q,
+  selected:index,
+  correct:q.answer,
+  section:sections[currentSection]
+ });
+
+ if(mode==="practice"){
+  showExplanation(q);
+ }
+
+ $("nextBtn").disabled=false;
+}
+
+function showExplanation(q){
+
+ const box=document.createElement("div");
+
+ box.className="explanation";
+
+ const title=document.createElement("strong");
+ title.textContent="Explanation: ";
+
+ const detail=document.createElement("span");
+ detail.textContent=q.explanation;
+
+ const source=document.createElement("p");
+ source.textContent="Source: "+q.source;
+
+ box.appendChild(title);
+ box.appendChild(detail);
+ box.appendChild(source);
+
+ $("explanationArea").appendChild(box);
+}
+
+function nextQuestion(){
+
+ if(selectedAnswer===null)return;
+
+ if(currentQuestion<24){
+
+  currentQuestion++;
+  showQuestion();
+
+ }else{
+
+  nextSection();
+
+ }
+}
+
+function nextSection(){
+
+ clearInterval(timerInterval);
+
+ currentSection++;
+
+ if(currentSection>=sections.length){
+  showResult();
+  return;
+ }
+
+ currentQuestion=0;
+
+ showQuestion();
+ startTimer();
+}
+
+function showResult(){
+
+ clearInterval(timerInterval);
+
+ $("quizArea").style.display="none";
+ $("resultArea").style.display="block";
+
+ const accuracy=attemptedCount
+  ?(correctCount/attemptedCount*100).toFixed(2)
+  :0;
+
+ $("finalScore").textContent=
+  "Score: "+score+" / 200";
+
+ $("finalDetails").innerHTML=
+  "Correct: "+correctCount+
+  "<br>Wrong: "+wrongCount+
+  "<br>Attempted: "+attemptedCount+
+  "<br>Unattempted: "+(100-attemptedCount)+
+  "<br>Accuracy: "+accuracy+"%";
+
+ $("reviewArea").innerHTML="<h3>Answer Review</h3>";
+
+ answers.forEach((item,index)=>{
+
+  const q=item.question;
+
+  const div=document.createElement("div");
+  div.className="card";
+
+  const question=document.createElement("p");
+  question.textContent=(index+1)+". "+q.text;
+
+  const yourAnswer=document.createElement("p");
+  yourAnswer.textContent=
+   "आपका उत्तर: "+q.options[item.selected];
+
+  const correct=document.createElement("p");
+  correct.textContent=
+   "सही उत्तर: "+q.options[q.answer];
+
+  const explanation=document.createElement("p");
+  explanation.textContent="Explanation: "+q.explanation;
+
+  const source=document.createElement("p");
+  source.className="muted";
+  source.textContent="Source: "+q.source;
+
+  div.append(
+   question,
+   yourAnswer,
+   correct,
+   explanation,
+   source
+  );
+
+  $("reviewArea").appendChild(div);
+
+ });
+
+}
+
+function escapeHTML(value){
+
+ return String(value).replace(/[&<>"']/g,char=>({
+  "&":"&amp;",
+  "<":"&lt;",
+  ">":"&gt;",
+  '"':"&quot;",
+  "'":"&#39;"
+ })[char]);
+
+}
+
+</script>
+
+</body>
+</html>
