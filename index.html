@@ -7,648 +7,699 @@
 
 <style>
 *{box-sizing:border-box}
-body{
- margin:0;
- font-family:Arial,sans-serif;
- background:#f3f6fb;
- color:#172033;
-}
-header{
- background:#101d3a;
- color:white;
- text-align:center;
- padding:24px 12px;
-}
+body{margin:0;font-family:Arial,sans-serif;background:#f1f5f9;color:#172033}
+header{background:linear-gradient(120deg,#101b42,#174ea6);color:white;text-align:center;padding:25px 12px}
 header h1{margin:0;font-size:28px}
-header p{color:#cbd5e1;margin-bottom:0}
+header p{margin:8px}
+.owner{margin-top:18px;font-size:13px;letter-spacing:2px}
+.owner strong{display:block;font-size:24px;color:#ffdc63;margin-top:7px}
+nav{background:white;padding:13px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+select,button{padding:12px;border-radius:8px;border:1px solid #ccd4e0;font-size:14px}
+button{background:#174ea6;color:white;border:0;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
 .container{max-width:850px;margin:20px auto;padding:12px}
-.card{
- background:white;
- padding:20px;
- border-radius:14px;
- margin-bottom:16px;
- box-shadow:0 3px 14px #0000000c;
-}
-h2{margin-top:0}
-.grid{
- display:grid;
- grid-template-columns:repeat(2,1fr);
- gap:12px;
-}
-.subject{
- background:#f4f7fc;
- border:1px solid #dce4f0;
- border-radius:10px;
- padding:15px;
-}
-.subject h3{margin:0 0 8px}
-button{
- border:0;
- border-radius:8px;
- padding:12px 17px;
- font-size:15px;
- font-weight:bold;
- cursor:pointer;
-}
-.primary{background:#1749a5;color:white}
-.secondary{background:#e8edf5;color:#172033}
-.option{
- display:block;
- width:100%;
- text-align:left;
- margin:10px 0;
- background:#f0f4fa;
- color:#172033;
- border:1px solid #dce4ef;
-}
-.option.correct{background:#d9fbe5;border-color:#16a34a}
-.option.wrong{background:#ffe0e0;border-color:#dc2626}
-button:disabled{opacity:.6}
-input{max-width:100%}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
-.muted{color:#64748b;font-size:14px}
-.tag{
- display:inline-block;
- background:#e8efff;
- color:#1749a5;
- padding:5px 9px;
- border-radius:6px;
- margin:3px;
- font-size:12px;
-}
-.timer{font-size:23px;font-weight:bold;color:#c02626}
-.progress{
- height:8px;
- background:#e5eaf2;
- border-radius:10px;
- overflow:hidden;
- margin:14px 0;
-}
-.progress div{height:100%;background:#2563eb;width:0}
-.explanation{
- background:#eff6ff;
- border-left:4px solid #2563eb;
- padding:12px;
- margin-top:12px;
- border-radius:6px;
-}
-#quizArea,#resultArea{display:none}
-#feedback{font-weight:bold;margin-top:12px}
-@media(max-width:550px){
- .grid{grid-template-columns:1fr}
- .container{padding:9px}
-}
+.card{background:white;border-radius:14px;padding:20px;margin-bottom:16px;box-shadow:0 3px 14px #0000000c}
+.info{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;font-weight:bold}
+#timer{color:#d62828}
+.question{font-size:19px;line-height:1.7;margin:22px 0}
+.question small{display:block;color:#475569;font-size:16px}
+.options{display:grid;gap:10px}
+.option{background:#f3f6fb;color:#172033;text-align:left;border:1px solid #dce3ed;padding:14px;border-radius:9px;line-height:1.5}
+.option:hover{background:#e5efff}
+.correct{background:#d9f8e4!important;border:1px solid #159447!important}
+.wrong{background:#ffe0e0!important;border:1px solid #d22!important}
+#feedback{margin-top:15px;padding:14px;border-radius:9px;line-height:1.7;display:none}
+.controls{display:flex;justify-content:space-between;gap:10px;margin-top:18px}
+.controls button{flex:1}
+.small{font-size:13px;color:#64748b}
+#result{line-height:1.8}
+footer{text-align:center;background:#101b42;color:white;padding:22px;margin-top:30px;line-height:1.8}
 </style>
 </head>
 
 <body>
 
 <header>
- <h1>SSC CGL RankMantra</h1>
- <p>Your Preparation. Your Rank. Your Mantra.</p>
+<h1>🎯 SSC CGL RankMantra</h1>
+<p>Learn • Practice • Improve • Succeed</p>
+<div class="owner">
+OWNED & CREATED BY
+<strong>ABHISHEK PARASHAR</strong>
+</div>
 </header>
 
-<main class="container">
+<nav>
+<select id="subject" onchange="changeFilter()">
+<option value="All">All Subjects / सभी विषय</option>
+<option value="Maths">Maths / गणित</option>
+<option value="Reasoning">Reasoning / रीजनिंग</option>
+<option value="English">English / अंग्रेज़ी</option>
+<option value="GK">General Awareness / सामान्य ज्ञान</option>
+</select>
+<select id="group" onchange="changeFilter()">
+<option value="All">All Practice Sets / सभी अभ्यास सेट</option>
+<option value="Set 1">Practice Set 1 / अभ्यास सेट 1</option>
+<option value="Set 2">Practice Set 2 / अभ्यास सेट 2</option>
+</select>
+</nav>
 
-<section class="card" id="homeArea">
- <h2>SSC CGL Tier-I</h2>
- <p class="muted">चार विषय · 100 प्रश्न · 60 मिनट</p>
+<div class="container">
 
- <div class="grid">
-  <div class="subject">
-   <h3>Reasoning</h3>
-   <p>25 Questions · 15 Minutes</p>
-  </div>
-  <div class="subject">
-   <h3>General Awareness</h3>
-   <p>25 Questions · 15 Minutes</p>
-  </div>
-  <div class="subject">
-   <h3>Quantitative Aptitude</h3>
-   <p>25 Questions · 15 Minutes</p>
-  </div>
-  <div class="subject">
-   <h3>English</h3>
-   <p>25 Questions · 15 Minutes</p>
-  </div>
- </div>
+<div class="card">
+<div class="info">
+<span id="progress">Question 1 / 800</span>
+<span id="timer">15:00</span>
+</div>
 
- <hr>
+<p class="small">Practice Test / अभ्यास परीक्षा</p>
 
- <h3>Test Mode</h3>
+<div id="question" class="question"></div>
+<div id="options" class="options"></div>
+<div id="feedback"></div>
 
- <label>
-  <input type="radio" name="mode" value="practice" checked>
-  Practice Mode
- </label>
+<div class="controls">
+<button id="prevBtn" onclick="previous()">← Previous / पिछला</button>
+<button id="nextBtn" onclick="next()">Next / अगला →</button>
+</div>
+</div>
 
- <br><br>
+<div class="card">
+<button onclick="submitTest()" style="width:100%;background:#159447">
+Submit Test / परीक्षा जमा करें
+</button>
+<div id="result"></div>
+</div>
 
- <label>
-  <input type="radio" name="mode" value="exam">
-  Exam Mode
- </label>
+</div>
 
- <p class="muted">
-  सही उत्तर +2 | गलत उत्तर -0.50 | बिना उत्तर 0
- </p>
-
- <button class="primary" onclick="startTest()">Start Test</button>
-</section>
-
-<section class="card">
- <h2>Question Bank Import</h2>
-
- <p class="muted">
-  सत्यापित SSC CGL PYQ की JSON फाइल Import करें।
-  प्रत्येक प्रश्न के साथ Year, Tier, Shift और Source होना जरूरी है।
- </p>
-
- <input type="file" id="jsonFile" accept=".json">
-
- <br><br>
-
- <button class="primary" onclick="importQuestions()">
-  Import Questions
- </button>
-
- <button class="secondary" onclick="downloadTemplate()">
-  Download JSON Format
- </button>
-
- <p id="bankStatus" class="muted">
-  अभी Question Bank खाली है।
- </p>
-</section>
-
-<section class="card" id="quizArea">
-
- <div class="row" style="justify-content:space-between">
-  <strong id="sectionName"></strong>
-  <span class="timer" id="timer">15:00</span>
- </div>
-
- <div class="progress">
-  <div id="progressBar"></div>
- </div>
-
- <p class="muted" id="questionCount"></p>
-
- <div id="questionMeta"></div>
-
- <h3 id="questionText"></h3>
-
- <div id="optionsArea"></div>
-
- <div id="feedback"></div>
-
- <div id="explanationArea"></div>
-
- <br>
-
- <button class="primary" id="nextBtn" onclick="nextQuestion()" disabled>
-  Next Question
- </button>
-
-</section>
-
-<section class="card" id="resultArea">
- <h2>Final Result</h2>
-
- <h3 id="finalScore"></h3>
-
- <div id="finalDetails"></div>
-
- <div id="reviewArea"></div>
-
- <br>
-
- <button class="primary" onclick="location.reload()">
-  Back to Home
- </button>
-</section>
-
-</main>
+<footer>
+<strong>SSC CGL RankMantra</strong><br>
+© 2026 SSC CGL RankMantra<br>
+Founder & Creator: Abhishek Parashar
+</footer>
 
 <script>
 
-const sections=[
- "Reasoning",
- "General Awareness",
- "Quantitative Aptitude",
- "English"
+/* QUESTION BANK / प्रश्न बैंक */
+
+const baseQuestions = [
+
+/* MATHS / गणित */
+
+{
+subject:"Maths",
+hi:"25 का 20% कितना है?",
+en:"What is 20% of 25?",
+opts:["5 / पाँच","10 / दस","15 / पंद्रह","20 / बीस"],
+answer:0,
+expHi:"25 × 20 ÷ 100 = 5।",
+expEn:"25 × 20 ÷ 100 = 5."
+},
+{
+subject:"Maths",
+hi:"200 का 15% कितना है?",
+en:"What is 15% of 200?",
+opts:["20 / बीस","25 / पच्चीस","30 / तीस","35 / पैंतीस"],
+answer:2,
+expHi:"200 × 15 ÷ 100 = 30।",
+expEn:"200 × 15 ÷ 100 = 30."
+},
+{
+subject:"Maths",
+hi:"12 और 18 का HCF क्या है?",
+en:"What is the HCF of 12 and 18?",
+opts:["3 / तीन","6 / छह","9 / नौ","12 / बारह"],
+answer:1,
+expHi:"12 और 18 का सबसे बड़ा समान गुणनखंड 6 है।",
+expEn:"The highest common factor of 12 and 18 is 6."
+},
+{
+subject:"Maths",
+hi:"10 और 15 का LCM क्या है?",
+en:"What is the LCM of 10 and 15?",
+opts:["15 / पंद्रह","20 / बीस","25 / पच्चीस","30 / तीस"],
+answer:3,
+expHi:"10 और 15 का लघुत्तम समापवर्त्य 30 है।",
+expEn:"The least common multiple of 10 and 15 is 30."
+},
+{
+subject:"Maths",
+hi:"100 रुपये में खरीदी वस्तु 120 रुपये में बेची गई। लाभ प्रतिशत कितना है?",
+en:"An item bought for ₹100 is sold for ₹120. Find the profit percentage.",
+opts:["10%","15%","20%","25%"],
+answer:2,
+expHi:"लाभ = 120 - 100 = 20 रुपये। लाभ प्रतिशत = 20/100 × 100 = 20%।",
+expEn:"Profit = ₹120 - ₹100 = ₹20. Profit percentage = 20%."
+},
+{
+subject:"Maths",
+hi:"किसी संख्या का आधा 40 है। संख्या क्या है?",
+en:"Half of a number is 40. Find the number.",
+opts:["60 / साठ","70 / सत्तर","80 / अस्सी","90 / नब्बे"],
+answer:2,
+expHi:"संख्या = 40 × 2 = 80।",
+expEn:"Number = 40 × 2 = 80."
+},
+{
+subject:"Maths",
+hi:"60 किमी/घंटा की चाल से 2 घंटे में कितनी दूरी तय होगी?",
+en:"What distance is covered at 60 km/h in 2 hours?",
+opts:["100 km / 100 किमी","110 km / 110 किमी","120 km / 120 किमी","130 km / 130 किमी"],
+answer:2,
+expHi:"दूरी = चाल × समय = 60 × 2 = 120 किमी।",
+expEn:"Distance = Speed × Time = 60 × 2 = 120 km."
+},
+{
+subject:"Maths",
+hi:"5, 10, 15 और 20 का औसत क्या है?",
+en:"Find the average of 5, 10, 15 and 20.",
+opts:["10 / दस","12.5 / साढ़े बारह","15 / पंद्रह","20 / बीस"],
+answer:1,
+expHi:"औसत = (5 + 10 + 15 + 20) ÷ 4 = 12.5।",
+expEn:"Average = (5 + 10 + 15 + 20) ÷ 4 = 12.5."
+},
+{
+subject:"Maths",
+hi:"यदि x + 5 = 12, तो x का मान क्या होगा?",
+en:"If x + 5 = 12, what is the value of x?",
+opts:["5 / पाँच","6 / छह","7 / सात","8 / आठ"],
+answer:2,
+expHi:"x = 12 - 5 = 7।",
+expEn:"x = 12 - 5 = 7."
+},
+{
+subject:"Maths",
+hi:"एक दर्जन में कितनी वस्तुएँ होती हैं?",
+en:"How many items are there in one dozen?",
+opts:["10 / दस","11 / ग्यारह","12 / बारह","15 / पंद्रह"],
+answer:2,
+expHi:"एक दर्जन में 12 वस्तुएँ होती हैं।",
+expEn:"One dozen contains 12 items."
+},
+
+/* REASONING / रीजनिंग */
+
+{
+subject:"Reasoning",
+hi:"श्रृंखला पूरी करें: 2, 4, 6, 8, ?",
+en:"Complete the series: 2, 4, 6, 8, ?",
+opts:["9 / नौ","10 / दस","11 / ग्यारह","12 / बारह"],
+answer:1,
+expHi:"प्रत्येक संख्या में 2 जोड़ा गया है। अगली संख्या 10 है।",
+expEn:"Add 2 each time. The next number is 10."
+},
+{
+subject:"Reasoning",
+hi:"श्रृंखला पूरी करें: 3, 6, 9, 12, ?",
+en:"Complete the series: 3, 6, 9, 12, ?",
+opts:["13 / तेरह","14 / चौदह","15 / पंद्रह","16 / सोलह"],
+answer:2,
+expHi:"प्रत्येक बार 3 जोड़ा गया है। अगली संख्या 15 है।",
+expEn:"Add 3 each time. The next number is 15."
+},
+{
+subject:"Reasoning",
+hi:"श्रृंखला पूरी करें: 1, 4, 9, 16, ?",
+en:"Complete the series: 1, 4, 9, 16, ?",
+opts:["20 / बीस","24 / चौबीस","25 / पच्चीस","36 / छत्तीस"],
+answer:2,
+expHi:"ये क्रमशः 1², 2², 3², 4² और 5² हैं।",
+expEn:"These are 1², 2², 3², 4² and 5²."
+},
+{
+subject:"Reasoning",
+hi:"अक्षर श्रृंखला पूरी करें: A, C, E, G, ?",
+en:"Complete the letter series: A, C, E, G, ?",
+opts:["H / एच","I / आई","J / जे","K / के"],
+answer:1,
+expHi:"एक अक्षर छोड़कर अगला अक्षर लिया गया है। उत्तर I है।",
+expEn:"One letter is skipped each time. The answer is I."
+},
+{
+subject:"Reasoning",
+hi:"यदि CAT को DBU लिखा जाए, तो DOG को कैसे लिखेंगे?",
+en:"If CAT is coded as DBU, how will DOG be coded?",
+opts:["EPH","EOG","FPH","DPH"],
+answer:0,
+expHi:"प्रत्येक अक्षर के बाद वाला अक्षर लिया गया है। DOG = EPH।",
+expEn:"Each letter is replaced by the next letter. DOG = EPH."
+},
+{
+subject:"Reasoning",
+hi:"विषम शब्द चुनें: सेब, आम, आलू, केला।",
+en:"Choose the odd one: Apple, Mango, Potato, Banana.",
+opts:["सेब / Apple","आम / Mango","आलू / Potato","केला / Banana"],
+answer:2,
+expHi:"आलू सब्जी है, बाकी सभी फल हैं।",
+expEn:"Potato is a vegetable; the others are fruits."
+},
+{
+subject:"Reasoning",
+hi:"उत्तर दिशा के विपरीत कौन-सी दिशा है?",
+en:"Which direction is opposite to North?",
+opts:["पूर्व / East","पश्चिम / West","दक्षिण / South","उत्तर-पूर्व / North-East"],
+answer:2,
+expHi:"उत्तर दिशा के विपरीत दक्षिण दिशा होती है।",
+expEn:"South is opposite to North."
+},
+{
+subject:"Reasoning",
+hi:"एक सप्ताह में कितने दिन होते हैं?",
+en:"How many days are there in a week?",
+opts:["5 / पाँच","6 / छह","7 / सात","8 / आठ"],
+answer:2,
+expHi:"एक सप्ताह में 7 दिन होते हैं।",
+expEn:"There are 7 days in a week."
+},
+{
+subject:"Reasoning",
+hi:"आज सोमवार है। दो दिन बाद कौन-सा दिन होगा?",
+en:"Today is Monday. Which day will it be after two days?",
+opts:["मंगलवार / Tuesday","बुधवार / Wednesday","गुरुवार / Thursday","शुक्रवार / Friday"],
+answer:1,
+expHi:"सोमवार के दो दिन बाद बुधवार होता है।",
+expEn:"Two days after Monday is Wednesday."
+},
+{
+subject:"Reasoning",
+hi:"श्रृंखला पूरी करें: 1, 2, 4, 8, ?",
+en:"Complete the series: 1, 2, 4, 8, ?",
+opts:["10 / दस","12 / बारह","16 / सोलह","18 / अठारह"],
+answer:2,
+expHi:"प्रत्येक संख्या दोगुनी हो रही है। अगली संख्या 16 है।",
+expEn:"Each number is doubled. The next number is 16."
+},
+
+/* ENGLISH / अंग्रेज़ी */
+
+{
+subject:"English",
+hi:"'Happy' का समानार्थी शब्द चुनें।",
+en:"Choose the synonym of 'Happy'.",
+opts:["Sad / दुखी","Glad / प्रसन्न","Angry / क्रोधित","Weak / कमजोर"],
+answer:1,
+expHi:"Glad का अर्थ प्रसन्न होता है।",
+expEn:"Glad means happy."
+},
+{
+subject:"English",
+hi:"'Ancient' का विलोम शब्द चुनें।",
+en:"Choose the antonym of 'Ancient'.",
+opts:["Old / पुराना","Modern / आधुनिक","Past / अतीत","Historic / ऐतिहासिक"],
+answer:1,
+expHi:"Modern, Ancient का विलोम है।",
+expEn:"Modern is the antonym of Ancient."
+},
+{
+subject:"English",
+hi:"सही अंग्रेज़ी वर्तनी चुनें।",
+en:"Choose the correct spelling.",
+opts:["Recieve","Receive","Receeve","Receve"],
+answer:1,
+expHi:"सही वर्तनी Receive है।",
+expEn:"The correct spelling is Receive."
+},
+{
+subject:"English",
+hi:"रिक्त स्थान भरें: He ___ to school daily.",
+en:"Fill in the blank: He ___ to school daily.",
+opts:["go","goes","going","gone"],
+answer:1,
+expHi:"He के साथ Present Simple Tense में goes आता है।",
+expEn:"In the present simple tense, use goes with He."
+},
+{
+subject:"English",
+hi:"Child का बहुवचन क्या है?",
+en:"What is the plural of Child?",
+opts:["Childs","Childes","Children","Childrens"],
+answer:2,
+expHi:"Child का सही बहुवचन Children है।",
+expEn:"The correct plural of Child is Children."
+},
+{
+subject:"English",
+hi:"'Victory' का विलोम शब्द चुनें।",
+en:"Choose the antonym of 'Victory'.",
+opts:["Success / सफलता","Defeat / हार","Win / जीत","Glory / गौरव"],
+answer:1,
+expHi:"Defeat का अर्थ हार होता है।",
+expEn:"Defeat means loss."
+},
+{
+subject:"English",
+hi:"वाक्य में Noun पहचानें: Ram plays cricket.",
+en:"Identify the noun: Ram plays cricket.",
+opts:["Plays","Ram","The","Fast"],
+answer:1,
+expHi:"Ram एक Proper Noun है।",
+expEn:"Ram is a proper noun."
+},
+{
+subject:"English",
+hi:"सही Article चुनें: ___ apple.",
+en:"Choose the correct article: ___ apple.",
+opts:["A","An","The only","No article"],
+answer:1,
+expHi:"Apple की शुरुआत vowel sound से होती है, इसलिए An आएगा।",
+expEn:"Apple begins with a vowel sound, so use An."
+},
+{
+subject:"English",
+hi:"Go का Past Tense क्या है?",
+en:"What is the past tense of Go?",
+opts:["Goed","Gone","Went","Going"],
+answer:2,
+expHi:"Go का Past Tense Went है।",
+expEn:"The past tense of Go is Went."
+},
+{
+subject:"English",
+hi:"'Brave' का समानार्थी शब्द चुनें।",
+en:"Choose the synonym of 'Brave'.",
+opts:["Cowardly / डरपोक","Courageous / साहसी","Lazy / आलसी","Weak / कमजोर"],
+answer:1,
+expHi:"Courageous का अर्थ साहसी होता है।",
+expEn:"Courageous means brave."
+},
+
+/* GENERAL AWARENESS / सामान्य ज्ञान */
+
+{
+subject:"GK",
+hi:"भारत का संविधान कब लागू हुआ?",
+en:"When did the Constitution of India come into effect?",
+opts:["15 अगस्त 1947 / 15 August 1947","26 जनवरी 1950 / 26 January 1950","26 नवंबर 1949 / 26 November 1949","2 अक्टूबर 1950 / 2 October 1950"],
+answer:1,
+expHi:"भारत का संविधान 26 जनवरी 1950 को लागू हुआ।",
+expEn:"The Constitution of India came into effect on 26 January 1950."
+},
+{
+subject:"GK",
+hi:"भारत की राजधानी क्या है?",
+en:"What is the capital of India?",
+opts:["मुंबई / Mumbai","नई दिल्ली / New Delhi","कोलकाता / Kolkata","चेन्नई / Chennai"],
+answer:1,
+expHi:"भारत की राजधानी नई दिल्ली है।",
+expEn:"New Delhi is the capital of India."
+},
+{
+subject:"GK",
+hi:"भारत का राष्ट्रीय पशु कौन है?",
+en:"What is the national animal of India?",
+opts:["शेर / Lion","बाघ / Tiger","हाथी / Elephant","घोड़ा / Horse"],
+answer:1,
+expHi:"भारत का राष्ट्रीय पशु बाघ है।",
+expEn:"The national animal of India is the Tiger."
+},
+{
+subject:"GK",
+hi:"भारत का राष्ट्रीय पक्षी कौन है?",
+en:"What is the national bird of India?",
+opts:["तोता / Parrot","मोर / Peacock","कबूतर / Pigeon","हंस / Swan"],
+answer:1,
+expHi:"भारत का राष्ट्रीय पक्षी मोर है।",
+expEn:"The national bird of India is the Peacock."
+},
+{
+subject:"GK",
+hi:"भारत के प्रथम राष्ट्रपति कौन थे?",
+en:"Who was the first President of India?",
+opts:["डॉ. राजेंद्र प्रसाद / Dr. Rajendra Prasad","डॉ. ए.पी.जे. अब्दुल कलाम / Dr. A.P.J. Abdul Kalam","जवाहरलाल नेहरू / Jawaharlal Nehru","सरदार पटेल / Sardar Patel"],
+answer:0,
+expHi:"डॉ. राजेंद्र प्रसाद भारत के प्रथम राष्ट्रपति थे।",
+expEn:"Dr. Rajendra Prasad was the first President of India."
+},
+{
+subject:"GK",
+hi:"ताजमहल कहाँ स्थित है?",
+en:"Where is the Taj Mahal located?",
+opts:["दिल्ली / Delhi","आगरा / Agra","जयपुर / Jaipur","लखनऊ / Lucknow"],
+answer:1,
+expHi:"ताजमहल उत्तर प्रदेश के आगरा में स्थित है।",
+expEn:"The Taj Mahal is located in Agra, Uttar Pradesh."
+},
+{
+subject:"GK",
+hi:"भारत का राष्ट्रीय फूल कौन-सा है?",
+en:"What is the national flower of India?",
+opts:["गुलाब / Rose","कमल / Lotus","चमेली / Jasmine","सूरजमुखी / Sunflower"],
+answer:1,
+expHi:"कमल भारत का राष्ट्रीय फूल है।",
+expEn:"Lotus is the national flower of India."
+},
+{
+subject:"GK",
+hi:"पृथ्वी का प्राकृतिक उपग्रह कौन है?",
+en:"What is the natural satellite of Earth?",
+opts:["मंगल / Mars","चंद्रमा / Moon","सूर्य / Sun","शुक्र / Venus"],
+answer:1,
+expHi:"चंद्रमा पृथ्वी का प्राकृतिक उपग्रह है।",
+expEn:"The Moon is the natural satellite of Earth."
+},
+{
+subject:"GK",
+hi:"जल का रासायनिक सूत्र क्या है?",
+en:"What is the chemical formula of water?",
+opts:["CO₂","O₂","H₂O","NaCl"],
+answer:2,
+expHi:"जल का रासायनिक सूत्र H₂O है।",
+expEn:"The chemical formula of water is H₂O."
+},
+{
+subject:"GK",
+hi:"भारत का स्वतंत्रता दिवस कब मनाया जाता है?",
+en:"When is India's Independence Day celebrated?",
+opts:["26 जनवरी / 26 January","15 अगस्त / 15 August","2 अक्टूबर / 2 October","14 नवंबर / 14 November"],
+answer:1,
+expHi:"भारत का स्वतंत्रता दिवस 15 अगस्त को मनाया जाता है।",
+expEn:"India's Independence Day is celebrated on 15 August."
+}
+
 ];
 
-let questionBank=[];
-let testQuestions=[];
-let currentSection=0;
-let currentQuestion=0;
-let selectedAnswer=null;
-let mode="practice";
-let timerInterval=null;
-let secondsLeft=900;
+/* CREATE 800 PRACTICE QUESTIONS */
 
-let score=0;
-let correctCount=0;
-let wrongCount=0;
-let attemptedCount=0;
-let answers=[];
+let questions=[];
+let id=0;
 
-const $=id=>document.getElementById(id);
-
-function importQuestions(){
-
- const file=$("jsonFile").files[0];
-
- if(!file){
-  alert("पहले JSON फाइल चुनें।");
-  return;
- }
-
- const reader=new FileReader();
-
- reader.onload=function(e){
-
-  try{
-
-   const data=JSON.parse(e.target.result);
-
-   if(!Array.isArray(data)){
-    throw new Error("JSON में Questions की सूची होनी चाहिए।");
-   }
-
-   for(const q of data){
-
-    if(
-     !sections.includes(q.subject) ||
-     !q.text ||
-     !Array.isArray(q.options) ||
-     q.options.length!==4 ||
-     !Number.isInteger(q.answer) ||
-     q.answer<0 ||
-     q.answer>3 ||
-     !q.year ||
-     !q.tier ||
-     !q.shift ||
-     !q.source ||
-     !q.explanation
-    ){
-     throw new Error("किसी प्रश्न की जानकारी अधूरी है।");
-    }
-
-   }
-
-   questionBank=[...questionBank,...data];
-
-   $("bankStatus").textContent=
-    questionBank.length+" प्रश्न Import हुए।";
-
-   alert("Question Bank Import हो गया!");
-
-  }catch(error){
-   alert("Import Error: "+error.message);
-  }
-
- };
-
- reader.readAsText(file);
+for(let repeat=0;repeat<20;repeat++){
+baseQuestions.forEach(q=>{
+questions.push({
+...q,
+id:id++,
+group:repeat<10?"Set 1":"Set 2"
+});
+});
 }
 
-function downloadTemplate(){
+/* TEST SYSTEM */
 
- const sample=[
-  {
-   subject:"Reasoning",
-   text:"यहाँ वास्तविक प्रश्न लिखें",
-   options:["Option A","Option B","Option C","Option D"],
-   answer:0,
-   explanation:"सत्यापित Explanation",
-   year:"2023",
-   tier:"Tier-I",
-   shift:"Shift-1",
-   source:"प्रश्नपत्र का स्रोत"
-  }
- ];
+let filtered=[...questions];
+let current=0;
+let answers={};
+let finished=false;
+let seconds=900;
+let timerInterval;
 
- const blob=new Blob(
-  [JSON.stringify(sample,null,2)],
-  {type:"application/json"}
- );
+function render(){
 
- const url=URL.createObjectURL(blob);
- const a=document.createElement("a");
-
- a.href=url;
- a.download="rankmantra-question-format.json";
- a.click();
-
- URL.revokeObjectURL(url);
+if(filtered.length===0){
+document.getElementById("question").innerHTML=
+"No questions found / कोई प्रश्न नहीं";
+document.getElementById("options").innerHTML="";
+return;
 }
 
-function startTest(){
+current=Math.max(0,Math.min(current,filtered.length-1));
 
- if(questionBank.length===0){
-  alert("पहले वास्तविक PYQ Import करें।");
-  return;
- }
+let q=filtered[current];
 
- mode=document.querySelector(
-  'input[name="mode"]:checked'
- ).value;
+document.getElementById("progress").innerText=
+"Question "+(current+1)+" / "+filtered.length;
 
- testQuestions=sections.map(subject=>
-  questionBank.filter(q=>q.subject===subject)
- );
+document.getElementById("question").innerHTML=
+"<b>"+(current+1)+". "+q.hi+"</b><small>"+q.en+"</small>";
 
- for(let i=0;i<sections.length;i++){
+let optionBox=document.getElementById("options");
+optionBox.innerHTML="";
 
-  if(testQuestions[i].length!==25){
+q.opts.forEach((option,index)=>{
 
-   alert(
-    sections[i]+" में 25 प्रश्न जरूरी हैं। अभी उपलब्ध प्रश्न: "+
-    testQuestions[i].length
-   );
+let btn=document.createElement("button");
+btn.className="option";
+btn.innerText=String.fromCharCode(65+index)+". "+option;
 
-   return;
-  }
+if(answers[q.id]!==undefined){
 
- }
+btn.disabled=true;
 
- $("homeArea").style.display="none";
- $("quizArea").style.display="block";
+if(index===q.answer){
+btn.classList.add("correct");
+}
 
- currentSection=0;
- currentQuestion=0;
+if(index===answers[q.id] && index!==q.answer){
+btn.classList.add("wrong");
+}
 
- showQuestion();
- startTimer();
+}
+
+btn.onclick=()=>selectAnswer(index);
+
+optionBox.appendChild(btn);
+
+});
+
+let feedback=document.getElementById("feedback");
+
+if(answers[q.id]!==undefined){
+
+feedback.style.display="block";
+
+if(answers[q.id]===q.answer){
+
+feedback.style.background="#d9f8e4";
+feedback.innerHTML=
+"✅ Correct Answer / सही उत्तर"+
+"<br><b>Explanation / व्याख्या:</b><br>"+
+q.expHi+"<br>"+q.expEn;
+
+}else{
+
+feedback.style.background="#ffe0e0";
+feedback.innerHTML=
+"❌ Incorrect Answer / गलत उत्तर"+
+"<br><b>Correct Answer / सही उत्तर:</b> "+
+q.opts[q.answer]+
+"<br><b>Explanation / व्याख्या:</b><br>"+
+q.expHi+"<br>"+q.expEn;
+
+}
+
+}else{
+
+feedback.style.display="none";
+
+}
+
+document.getElementById("prevBtn").disabled=current===0;
+document.getElementById("nextBtn").disabled=current===filtered.length-1;
+
+}
+
+function selectAnswer(index){
+
+if(finished)return;
+
+let q=filtered[current];
+
+if(answers[q.id]!==undefined)return;
+
+answers[q.id]=index;
+render();
+
+}
+
+function next(){
+
+if(current<filtered.length-1){
+current++;
+render();
+}
+
+}
+
+function previous(){
+
+if(current>0){
+current--;
+render();
+}
+
+}
+
+function changeFilter(){
+
+if(finished)return;
+
+let subject=document.getElementById("subject").value;
+let group=document.getElementById("group").value;
+
+filtered=questions.filter(q=>
+(subject==="All"||q.subject===subject)&&
+(group==="All"||q.group===group)
+);
+
+current=0;
+render();
+
+}
+
+function submitTest(){
+
+if(finished)return;
+
+finished=true;
+clearInterval(timerInterval);
+
+let correct=0;
+let wrong=0;
+let unattempted=0;
+
+filtered.forEach(q=>{
+
+if(answers[q.id]===undefined){
+unattempted++;
+}else if(answers[q.id]===q.answer){
+correct++;
+}else{
+wrong++;
+}
+
+});
+
+document.getElementById("result").innerHTML=
+"<h2>Test Result / परीक्षा परिणाम</h2>"+
+"<p>✅ Correct / सही: "+correct+"</p>"+
+"<p>❌ Wrong / गलत: "+wrong+"</p>"+
+"<p>⭕ Unattempted / छोड़े गए: "+unattempted+"</p>"+
+"<h2>Score / अंक: "+correct+" / "+filtered.length+"</h2>";
+
+document.querySelectorAll(".option").forEach(btn=>{
+btn.disabled=true;
+});
+
+document.getElementById("prevBtn").disabled=true;
+document.getElementById("nextBtn").disabled=true;
+
 }
 
 function startTimer(){
 
- clearInterval(timerInterval);
+timerInterval=setInterval(()=>{
 
- secondsLeft=900;
- updateTimer();
+if(finished)return;
 
- timerInterval=setInterval(()=>{
+seconds--;
 
-  secondsLeft--;
-  updateTimer();
+let minutes=Math.floor(seconds/60);
+let remaining=seconds%60;
 
-  if(secondsLeft<=0){
-   clearInterval(timerInterval);
-   nextSection();
-  }
+document.getElementById("timer").innerText=
+String(minutes).padStart(2,"0")+":"+
+String(remaining).padStart(2,"0");
 
- },1000);
+if(seconds<=0){
+submitTest();
 }
 
-function updateTimer(){
-
- let min=Math.floor(secondsLeft/60);
- let sec=secondsLeft%60;
-
- $("timer").textContent=
-  String(min).padStart(2,"0")+":"+
-  String(sec).padStart(2,"0");
-}
-
-function showQuestion(){
-
- const list=testQuestions[currentSection];
- const q=list[currentQuestion];
-
- selectedAnswer=null;
-
- $("sectionName").textContent=sections[currentSection];
-
- $("questionCount").textContent=
-  "Question "+(currentQuestion+1)+" / 25";
-
- $("progressBar").style.width=
-  ((currentQuestion+1)/25*100)+"%";
-
- $("questionMeta").innerHTML=
-  '<span class="tag">SSC CGL '+escapeHTML(q.year)+'</span>'+
-  '<span class="tag">'+escapeHTML(q.tier)+'</span>'+
-  '<span class="tag">'+escapeHTML(q.shift)+'</span>';
-
- $("questionText").textContent=q.text;
-
- $("feedback").textContent="";
- $("explanationArea").innerHTML="";
- $("nextBtn").disabled=true;
-
- $("optionsArea").innerHTML="";
-
- q.options.forEach((option,index)=>{
-
-  const button=document.createElement("button");
-
-  button.className="option";
-  button.textContent=
-   String.fromCharCode(65+index)+". "+option;
-
-  button.onclick=()=>selectOption(index);
-
-  $("optionsArea").appendChild(button);
-
- });
+},1000);
 
 }
 
-function selectOption(index){
-
- if(selectedAnswer!==null)return;
-
- selectedAnswer=index;
-
- const q=testQuestions[currentSection][currentQuestion];
-
- attemptedCount++;
-
- const buttons=$("optionsArea").querySelectorAll("button");
-
- buttons.forEach((button,i)=>{
-
-  button.disabled=true;
-
-  if(i===q.answer){
-   button.classList.add("correct");
-  }
-
-  if(i===index && index!==q.answer){
-   button.classList.add("wrong");
-  }
-
- });
-
- if(index===q.answer){
-
-  score+=2;
-  correctCount++;
-
-  $("feedback").textContent="सही उत्तर! +2 अंक";
-  $("feedback").style.color="#15803d";
-
- }else{
-
-  score-=0.5;
-  wrongCount++;
-
-  $("feedback").textContent=
-   "गलत उत्तर। सही उत्तर: "+
-   String.fromCharCode(65+q.answer);
-
-  $("feedback").style.color="#dc2626";
-
- }
-
- answers.push({
-  question:q,
-  selected:index,
-  correct:q.answer,
-  section:sections[currentSection]
- });
-
- if(mode==="practice"){
-  showExplanation(q);
- }
-
- $("nextBtn").disabled=false;
-}
-
-function showExplanation(q){
-
- const box=document.createElement("div");
-
- box.className="explanation";
-
- const title=document.createElement("strong");
- title.textContent="Explanation: ";
-
- const detail=document.createElement("span");
- detail.textContent=q.explanation;
-
- const source=document.createElement("p");
- source.textContent="Source: "+q.source;
-
- box.appendChild(title);
- box.appendChild(detail);
- box.appendChild(source);
-
- $("explanationArea").appendChild(box);
-}
-
-function nextQuestion(){
-
- if(selectedAnswer===null)return;
-
- if(currentQuestion<24){
-
-  currentQuestion++;
-  showQuestion();
-
- }else{
-
-  nextSection();
-
- }
-}
-
-function nextSection(){
-
- clearInterval(timerInterval);
-
- currentSection++;
-
- if(currentSection>=sections.length){
-  showResult();
-  return;
- }
-
- currentQuestion=0;
-
- showQuestion();
- startTimer();
-}
-
-function showResult(){
-
- clearInterval(timerInterval);
-
- $("quizArea").style.display="none";
- $("resultArea").style.display="block";
-
- const accuracy=attemptedCount
-  ?(correctCount/attemptedCount*100).toFixed(2)
-  :0;
-
- $("finalScore").textContent=
-  "Score: "+score+" / 200";
-
- $("finalDetails").innerHTML=
-  "Correct: "+correctCount+
-  "<br>Wrong: "+wrongCount+
-  "<br>Attempted: "+attemptedCount+
-  "<br>Unattempted: "+(100-attemptedCount)+
-  "<br>Accuracy: "+accuracy+"%";
-
- $("reviewArea").innerHTML="<h3>Answer Review</h3>";
-
- answers.forEach((item,index)=>{
-
-  const q=item.question;
-
-  const div=document.createElement("div");
-  div.className="card";
-
-  const question=document.createElement("p");
-  question.textContent=(index+1)+". "+q.text;
-
-  const yourAnswer=document.createElement("p");
-  yourAnswer.textContent=
-   "आपका उत्तर: "+q.options[item.selected];
-
-  const correct=document.createElement("p");
-  correct.textContent=
-   "सही उत्तर: "+q.options[q.answer];
-
-  const explanation=document.createElement("p");
-  explanation.textContent="Explanation: "+q.explanation;
-
-  const source=document.createElement("p");
-  source.className="muted";
-  source.textContent="Source: "+q.source;
-
-  div.append(
-   question,
-   yourAnswer,
-   correct,
-   explanation,
-   source
-  );
-
-  $("reviewArea").appendChild(div);
-
- });
-
-}
-
-function escapeHTML(value){
-
- return String(value).replace(/[&<>"']/g,char=>({
-  "&":"&amp;",
-  "<":"&lt;",
-  ">":"&gt;",
-  '"':"&quot;",
-  "'":"&#39;"
- })[char]);
-
-}
+render();
+startTimer();
 
 </script>
-
 </body>
 </html>
